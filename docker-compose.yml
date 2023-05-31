@@ -9,6 +9,8 @@ services:
       - challenge-intention-db
       - challenge-intention-messenger
       - products-service
+    volumes:
+      - ./intentions/src:/app
   products-service:
     build: './products'
     container_name: products-service
