@@ -10,9 +10,9 @@ api = Api(
   description='A service of purchase intentions',
 )
 
-ns = api.namespace('intentions')
+ns = api.namespace('')
 
-@ns.route('/')
+@ns.route('/intentions/')
 class HelloWorld(Resource):
   def get(self):
     data = {
