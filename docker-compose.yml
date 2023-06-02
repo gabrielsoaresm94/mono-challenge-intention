@@ -22,12 +22,12 @@ services:
   #   volumes:
   #     - ./products:/app
   challenge-intention-db:
-    image: "postgres:12"
+    build: './challenge-intention-db'
     container_name: challenge-intention-db
     hostname: challenge-intention-db-postgres
     restart: "always"
     ports:
-      - "5433:5432"
+      - "5432:5432"
     volumes:
       - challenge-intention-db:/var/lib/postgresql/data
     environment:
