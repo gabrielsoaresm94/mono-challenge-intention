@@ -22,7 +22,7 @@ services:
   #   volumes:
   #     - ./products:/app
   challenge-intention-db:
-    build: './challenge-intention-db'
+    image: "postgres:12"
     container_name: challenge-intention-db
     hostname: challenge-intention-db-postgres
     restart: "always"
@@ -34,7 +34,7 @@ services:
       POSTGRES_PASSWORD: "${CHALLENGE_INTENTION_DB_PASSWORD}"
       POSTGRES_USER: "${CHALLENGE_INTENTION_DB_USER}"
       POSTGRES_DB: "${CHALLENGE_INTENTION_DB_NAME}"
-      PGDATA: /var/lib/postgresql/data
+      # PGDATA: /var/lib/postgresql/data
     networks:
       - challenge-intention-network
   # challenge-intention-messenger:
