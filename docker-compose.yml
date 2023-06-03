@@ -11,6 +11,10 @@ services:
       # - products-service
     volumes:
       - ./intentions/src:/app
+    env_file:
+      - .env
+    networks:
+      - challenge-intention-network
   # products-service:
   #   build: './products'
   #   container_name: products-service
@@ -21,6 +25,8 @@ services:
   #     - challenge-intention-messenger
   #   volumes:
   #     - ./products:/app
+  # networks:
+  #     - challenge-intention-network
   challenge-intention-db:
     image: "postgres:12"
     container_name: challenge-intention-db
