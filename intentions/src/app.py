@@ -11,10 +11,10 @@ from modules.intentions.controllers import ns as intentions_ns
 from modules.clients.controllers import ns as clients_ns
 from modules.adresses.controllers import ns as adresses_ns
 
-from modules.intentions.infra.sqlalchemy.client import Client
-from modules.intentions.infra.sqlalchemy.address import Address
-from modules.intentions.infra.sqlalchemy.intention import Intention
-from modules.intentions.infra.sqlalchemy.intention_product import IntentionProduct
+from modules.clients.infra.sqlalchemy.entities.client import Client
+from modules.adresses.infra.sqlalchemy.entities.address import Address
+from modules.intentions.infra.sqlalchemy.entities.intention import Intention
+from modules.intentions.infra.sqlalchemy.entities.intention_product import IntentionProduct
 
 db_user = os.getenv("CHALLENGE_INTENTION_DB_USER")
 db_password = os.getenv("CHALLENGE_INTENTION_DB_PASSWORD")
