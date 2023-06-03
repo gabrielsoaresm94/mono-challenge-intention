@@ -1,20 +1,26 @@
 
 from flask import Blueprint, jsonify
-from flask_restx import Api, Resource
+from flask_restx import Namespace, Resource
 
-intentions_module = Blueprint('/', __name__)
-api = Api(
-  intentions_module,
-  version='1.0',
-  title='Intentions Service API',
-  description='A service of purchase intentions',
-)
+ns = Namespace('Intentions', description='Rotas relacionadas para processar intenções')
 
-ns = api.namespace('')
-
-@ns.route('/intentions/')
-class HelloWorld(Resource):
+@ns.route('/')
+class Intentions(Resource):
+  @ns.doc("list_intentions")
   def get(self):
+    data = {
+      'message': 'Hello World!',
+    }
+    return jsonify(data)
+  def post(self):
+    data = {
+      'message': 'Hello World!',
+    }
+    return jsonify(data)
+
+@ns.route('/<intention_id>/')
+class Intention(Resource):
+  def put(self):
     data = {
       'message': 'Hello World!',
     }
