@@ -1,10 +1,10 @@
 {
-  "name": "products-server",
+  "name": "products-service",
   "version": "1.0.0",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/server.js",
-    "dev": "ts-node-dev --respawn --transpile-only server.ts"
+    "start": "node dist/app.js",
+    "dev": "ts-node-dev --respawn --transpile-only app.ts"
   },
   "dependencies": {
     "express": "^4.17.1"
