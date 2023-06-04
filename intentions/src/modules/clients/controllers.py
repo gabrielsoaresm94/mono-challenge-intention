@@ -1,6 +1,7 @@
 
 from flask import jsonify
 from flask_restx import Namespace, Resource, fields
+from  modules.clients.services.create_client import CreateClient
 
 ns = Namespace('Clients', description='Rotas relacionadas para processar clientes')
 
@@ -30,7 +31,5 @@ return_client_response = ns.model(
 class Clients(Resource):
   @ns.doc(body=create_client_request_body)
   def post(self):
-    data = {
-      'message': 'Hello World!',
-    }
-    return jsonify(data)
+    client_created = CreateClient.execute()
+    return jsonify(client_created)

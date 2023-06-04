@@ -1,6 +1,8 @@
 
 from flask import Blueprint, jsonify
 from flask_restx import Namespace, Resource, fields
+from  modules.intentions.services.create_intention import CreateIntention
+from  modules.intentions.services.list_intentions import ListIntentions
 
 ns = Namespace('Intentions', description='Rotas relacionadas para processar intenções')
 
@@ -47,16 +49,12 @@ return_intention_response = ns.model(
 class Intentions(Resource):
   @ns.response(200, 'Success', [return_intention_response])
   def get(self):
-    data = {
-      'message': 'Hello World!',
-    }
-    return jsonify(data)
+    intentions_listed = ListIntentions.execute()
+    return jsonify(intentions_listed)
   @ns.doc(body=create_intention_request_body)
   def post(self):
-    data = {
-      'message': 'Hello World!',
-    }
-    return jsonify(data)
+    intention_created = CreateIntention.execute()
+    return jsonify(intention_created)
 
 # @ns.route('/<intention_id>/')
 # class Intention(Resource):
