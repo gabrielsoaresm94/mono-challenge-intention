@@ -1,21 +1,29 @@
 import { Router, Request, Response } from 'express';
+import ListProducts from './services/list-products';
 
 const productsRouter = Router();
 
 /**
  * @swagger
- * /products:
+ * /products/:
  *   get:
  *     summary: Retorna a lista de produtos.
+ *     description: Lista de produtos retornada com sucesso.
+ *     tags:
+ *       - Products
  *     responses:
  *       200:
- *         description: Lista de produtos retornada com sucesso.
+ *         description: Success
  */
 productsRouter.get(
   '/',
-  (req: Request, res: Response): Response => {
+  async (req: Request, res: Response): Promise<Response> => {
+
+    const productsListed = await ListProducts.execute();
+
     return res.json({
-      message: 'Produtos listados com sucesso!'
+      message: 'Produtos listados com sucesso!',
+      data: productsListed,
     });
   }
 );
