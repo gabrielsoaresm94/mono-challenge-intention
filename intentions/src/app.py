@@ -39,7 +39,7 @@ blueprint = Blueprint("/docs/", __name__)
 api = Api(
   blueprint,
   doc='/docs/',
-  version='1.0',
+  version='1.0.0',
   title='Intentions Service API',
   description='A service of purchase intentions'
 )
