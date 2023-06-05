@@ -23,6 +23,19 @@ class ProductRepository {
 
     return productsListed;
   }
+
+  public static async find(productId: number) {
+    const GET = 'get' as HTTPMethod;
+    const productResponse = await axiosProvider(GET, `${URL}/products/${productId}`);
+
+    if (!productResponse) {
+      return productResponse;
+    }
+
+    const productFound = productResponse.data;
+
+    return productFound;
+  }
 }
 
 export default ProductRepository;
