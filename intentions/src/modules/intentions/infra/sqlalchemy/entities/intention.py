@@ -13,3 +13,13 @@ class Intention(db.Model):
   address_id = db.Column(db.Integer, db.ForeignKey('address.address_id'), nullable=False)
   created_at = db.Column(db.DateTime, default=datetime.utcnow)
   updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+  def to_dict(self):
+    return {
+      'intention_id': self.intention_id,
+      'status': self.status,
+      'client_id': self.client_id,
+      'address_id': self.address_id,
+      'created_at': self.created_at,
+      'updated_at': self.updated_at
+    }

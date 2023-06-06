@@ -10,7 +10,7 @@ create_intention_request_body = ns.model(
   "CreateIntentionsRequestBody",
   {
     "client_id": fields.Integer(example=1, required=True, description="Identificador do cliente"),
-    "adress_id": fields.Integer(example=1, required=True, description="Identificador do endereço"),
+    "address_id": fields.Integer(example=1, required=True, description="Identificador do endereço"),
     'products': fields.List(fields.Integer, example=[1, 2, 3], required=True, description="Identificadores dos produtos, vindos da fake_api")
   }
 )
@@ -41,7 +41,7 @@ return_intention_response = ns.model(
     "number": fields.Integer(example=54, required=True, description="Número da casa/prédio em que o cliente reside"),
     "apartment": fields.Integer(example=201, required=False, description="Número do apartamento em que o cliente reside"),
     "complement": fields.String(example='Perto da padaria Empadaria', required=False, description="Complemento"),
-    'products': fields.List(fields.Nested(product), required=True, description="Dados dos produtos da intenção de compra")
+    "products": fields.List(fields.Nested(product), required=True, description="Dados dos produtos da intenção de compra")
   }
 )
 

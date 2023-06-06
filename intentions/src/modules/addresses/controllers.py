@@ -1,13 +1,13 @@
 
 from flask import Blueprint, jsonify
 from flask_restx import Namespace, Resource, fields
-from  modules.adresses.services.create_adress import CreateAdress
-from  modules.adresses.services.update_adress import UpdateAdress
+from  modules.addresses.services.create_address import CreateAddress
+from  modules.addresses.services.update_address import UpdateAddress
 
-ns = Namespace('Adresses', description='Rotas relacionadas para processar endereços')
+ns = Namespace('Addresses', description='Rotas relacionadas para processar endereços')
 
-create_adress_request_body = ns.model(
-  "CreateAdressRequestBody",
+create_address_request_body = ns.model(
+  "CreateAddressRequestBody",
   {
     "country": fields.String(example='Brasil', required=True, description="País em que o cliente reside"),
     "state": fields.String(example='Bahia', required=True, description="Estado em que o cliente reside"),
@@ -19,8 +19,8 @@ create_adress_request_body = ns.model(
   }
 )
 
-update_adress_request_body = ns.model(
-  "UpdateAdressRequestBody",
+update_address_request_body = ns.model(
+  "UpdateAddressRequestBody",
   {
     "country": fields.String(example='Brasil', required=False, description="País em que o cliente reside"),
     "state": fields.String(example='Bahia', required=False, description="Estado em que o cliente reside"),
@@ -33,15 +33,15 @@ update_adress_request_body = ns.model(
 )
 
 @ns.route('/')
-class Adresses(Resource):
-  @ns.doc(body=create_adress_request_body)
+class Addresses(Resource):
+  @ns.doc(body=create_address_request_body)
   def post(self):
-    adress_created = CreateAdress.execute()
-    return jsonify(adress_created)
+    address_created = CreateAddress.execute()
+    return jsonify(address_created)
 
-@ns.route('/<adress_id>/')
-class Adress(Resource):
-  @ns.doc(body=update_adress_request_body)
-  def put(self, adress_id):
-    adress_updated = UpdateAdress.execute()
-    return jsonify(adress_updated)
+@ns.route('/<address_id>/')
+class Address(Resource):
+  @ns.doc(body=update_address_request_body)
+  def put(self, address_id):
+    address_updated = UpdateAddress.execute()
+    return jsonify(address_updated)

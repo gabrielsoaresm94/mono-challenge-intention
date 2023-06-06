@@ -13,3 +13,18 @@ class Address(db.Model):
   client_id = db.Column(db.Integer, db.ForeignKey('client.client_id'), nullable=False)
   created_at = db.Column(db.DateTime, default=datetime.utcnow)
   updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+  def to_dict(self):
+    return {
+      'address_id': self.address_id,
+      'country': self.country,
+      'state': self.state,
+      'city': self.city,
+      'street': self.street,
+      'number': self.number,
+      'apartment': self.apartment,
+      'complement': self.complement,
+      'client_id': self.client_id,
+      'created_at': self.created_at,
+      'updated_at': self.updated_at
+    }

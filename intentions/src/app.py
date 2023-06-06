@@ -9,10 +9,10 @@ from shared.infra.db.sqlalchemy import sqlalchemy as db
 
 from modules.intentions.controllers import ns as intentions_ns
 from modules.clients.controllers import ns as clients_ns
-from modules.adresses.controllers import ns as adresses_ns
+from modules.addresses.controllers import ns as addresses_ns
 
 from modules.clients.infra.sqlalchemy.entities.client import Client
-from modules.adresses.infra.sqlalchemy.entities.address import Address
+from modules.addresses.infra.sqlalchemy.entities.address import Address
 from modules.intentions.infra.sqlalchemy.entities.intention import Intention
 from modules.intentions.infra.sqlalchemy.entities.intention_product import IntentionProduct
 
@@ -50,7 +50,7 @@ migrate = Migrate(app, db)
 
 api.add_namespace(intentions_ns, path="/intentions")
 api.add_namespace(clients_ns, path="/clients")
-api.add_namespace(adresses_ns, path="/adresses")
+api.add_namespace(addresses_ns, path="/addresses")
 
 app.register_blueprint(blueprint, url_prefix="/v1")
 
