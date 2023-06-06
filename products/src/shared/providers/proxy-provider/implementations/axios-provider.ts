@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 
-enum HTTPMethod {
+export enum HTTPMethod {
   GET = 'get',
   POST = 'post',
   PUT = 'put',
@@ -8,7 +8,7 @@ enum HTTPMethod {
   PATCH = 'patch',
 }
 
-async function axiosProvider(
+export async function axiosProvider(
   httpMethod: HTTPMethod,
   url: string,
   queryParams?: Object,
@@ -46,4 +46,3 @@ async function axiosProvider(
   }
 }
 
-export default axiosProvider;

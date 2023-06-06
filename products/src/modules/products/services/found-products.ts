@@ -1,10 +1,11 @@
+import { IProduct } from '../../intentions/dtos';
 import ProductRepository from '../infra/fake-store-api/repositories/product-repository';
 
-class FoundProduct {
-  public static async execute(productId: number): Promise<Object | undefined> {
+class FindProduct {
+  public static async execute(productId: Number): Promise<IProduct | undefined> {
     const productFound = await ProductRepository.find(productId);
     return productFound;
   }
 }
 
-export default FoundProduct;
+export default FindProduct;

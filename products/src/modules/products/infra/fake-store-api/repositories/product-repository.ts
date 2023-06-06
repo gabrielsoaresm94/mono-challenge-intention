@@ -1,17 +1,10 @@
-import axiosProvider from '../../../../../shared/providers/proxy-provider/implementations/axios-provider';
-
-enum HTTPMethod {
-  GET = 'get',
-  POST = 'post',
-  PUT = 'put',
-  DELETE = 'delete',
-  PATCH = 'patch',
-}
+import { axiosProvider, HTTPMethod } from '../../../../../shared/providers/proxy-provider/implementations/axios-provider';
+import { IProduct } from '../../../../intentions/dtos';
 
 const URL = 'https://fakestoreapi.com';
 
 class ProductRepository {
-  public static async list() {
+  public static async list(): Promise<Array<IProduct> | undefined> {
     const GET = 'get' as HTTPMethod;
     const productsResponse = await axiosProvider(GET, `${URL}/products`);
 
@@ -19,12 +12,12 @@ class ProductRepository {
       return productsResponse;
     }
 
-    const productsListed = productsResponse.data;
+    const productsListed = productsResponse.data as Array<IProduct>;
 
     return productsListed;
   }
 
-  public static async find(productId: number) {
+  public static async find(productId: Number): Promise<IProduct | undefined> {
     const GET = 'get' as HTTPMethod;
     const productResponse = await axiosProvider(GET, `${URL}/products/${productId}`);
 
@@ -32,7 +25,7 @@ class ProductRepository {
       return productResponse;
     }
 
-    const productFound = productResponse.data;
+    const productFound = productResponse.data as IProduct;
 
     return productFound;
   }
