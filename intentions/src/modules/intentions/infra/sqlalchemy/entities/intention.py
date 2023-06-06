@@ -6,6 +6,9 @@ class IntentionStatusEnum(enum.Enum):
   EM_SELECAO = 'em_selecao'
   SELECIONADO = 'selecionado'
 
+  def to_string(self):
+    return self.value
+
 class Intention(db.Model):
   intention_id = db.Column(db.Integer, primary_key=True)
   status = db.Column(db.Enum(IntentionStatusEnum), default=IntentionStatusEnum.EM_SELECAO, nullable=False)
@@ -17,7 +20,7 @@ class Intention(db.Model):
   def to_dict(self):
     return {
       'intention_id': self.intention_id,
-      'status': self.status,
+      'status': self.status.to_string(),
       'client_id': self.client_id,
       'address_id': self.address_id,
       'created_at': self.created_at,

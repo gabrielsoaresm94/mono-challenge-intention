@@ -1,8 +1,10 @@
-
-from flask import Blueprint, jsonify
+import json
+from flask import Blueprint, jsonify, request
 from flask_restx import Namespace, Resource, fields
-from  modules.intentions.services.create_intention import CreateIntention
-from  modules.intentions.services.list_intentions import ListIntentions
+from modules.intentions.services.create_intention import CreateIntention
+from modules.intentions.services.list_intentions import ListIntentions
+from modules.addresses.services.list_address_by_client_id import ListAddressesByClientId
+from shared.providers.request_http_provider.request_provider import request_provider
 
 ns = Namespace('Intentions', description='Rotas relacionadas para processar intenções')
 
@@ -32,15 +34,8 @@ return_intention_response = ns.model(
   "ReturnIntentionResponse",
   {
     "intention_id": fields.String(example=1, required=True, description="Identificador da intenção de compra"),
-    "name": fields.String(example='Fulano', required=True, description="Nome do cliente"),
     "status": fields.String(example='SELECIONADO', required=True, description="Status da intenção de compra"),
-    "country": fields.String(example='Brasil', required=True, description="País em que o cliente reside"),
-    "state": fields.String(example='Bahia', required=True, description="Estado em que o cliente reside"),
-    "city": fields.String(example='Salvador', required=True, description="Cidade em que o cliente reside"),
-    "street": fields.String(example='Rua E', required=True, description="Rua em que o cliente reside"),
-    "number": fields.Integer(example=54, required=True, description="Número da casa/prédio em que o cliente reside"),
-    "apartment": fields.Integer(example=201, required=False, description="Número do apartamento em que o cliente reside"),
-    "complement": fields.String(example='Perto da padaria Empadaria', required=False, description="Complemento"),
+    "address_id": fields.Integer(example=1, required=True, description="Identificador do endereço"),
     "products": fields.List(fields.Nested(product), required=True, description="Dados dos produtos da intenção de compra")
   }
 )
@@ -53,13 +48,40 @@ class Intentions(Resource):
     return jsonify(intentions_listed)
   @ns.doc(body=create_intention_request_body)
   def post(self):
-    intention_created = CreateIntention.execute()
-    return jsonify(intention_created)
+    json_data = request.get_json()
 
-# @ns.route('/<intention_id>/')
-# class Intention(Resource):
-#   def put(self):
-#     data = {
-#       'message': 'Hello World!',
-#     }
-#     return jsonify(data)
+    if not json_data:
+      return {"message": "O corpo não pode ser um objeto vazio!"}, 400
+
+    intention_data = request.get_json(force=True)
+    if intention_data.get("client_id") is None:
+      return {"message": "Campo 'client_id' é obrigatório!"}, 400
+
+    if intention_data.get("address_id") is None:
+      return {"message": "Campo 'address_id' é obrigatório!"}, 400
+
+    if intention_data.get("products") is None:
+      return {"message": "Campo 'products' é obrigatório!"}, 400
+
+    client_id = intention_data.get("client_id")
+    address_id = intention_data.get("address_id")
+    products = intention_data.get("products")
+
+    address_by_client_id = ListAddressesByClientId.execute(client_id)
+    address_by_client_id_data = address_by_client_id["data"]
+    address_found =[address for address in address_by_client_id_data if address["address_id"] == address_id]
+    if len(address_found) <= 0:
+      return {"message": "Impossível salvar uma intenção para um endereço que não foi cadastrado pelo cliente!"}, 400
+
+    intention_return = CreateIntention.execute(client_id, address_id, products)
+
+    return jsonify(intention_return)
+
+@ns.route('/<intention_id>/')
+class Intention(Resource):
+  def put(self, intention_id):
+    product_id = intention_id
+    data = {
+      'message': 'Hello World!',
+    }
+    return jsonify(data)

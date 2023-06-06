@@ -1,5 +1,5 @@
 
-from flask import jsonify, request
+from flask import jsonify, request, request
 from flask_restx import Namespace, Resource, fields
 from  modules.clients.services.create_client import CreateClient
 from  modules.addresses.services.create_address import CreateAddress

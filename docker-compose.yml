@@ -8,25 +8,25 @@ services:
     depends_on:
       - challenge-intention-db
       # - challenge-intention-messenger
-      # - products-service
+      - products-service
     volumes:
       - ./intentions/src:/app
     env_file:
       - .env
     networks:
       - challenge-intention-network
-  # products-service:
-  #   build: './products'
-  #   container_name: products-service
-  #   ports:
-  #     - 3001:3001
-  #   depends_on:
-  #     - challenge-intention-db
-  #     - challenge-intention-messenger
-  #   volumes:
-  #     - ./products:/app
-  # networks:
-  #     - challenge-intention-network
+  products-service:
+    build: './products'
+    container_name: products-service
+    ports:
+      - 3001:3001
+    depends_on:
+      - challenge-intention-db
+      # - challenge-intention-messenger
+    volumes:
+      - ./products:/app
+    networks:
+      - challenge-intention-network
   challenge-intention-db:
     image: "postgres:12"
     container_name: challenge-intention-db
