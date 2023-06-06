@@ -9,7 +9,7 @@ class CreateIntention():
     last_intention = max(list_intentions, key=lambda intention: intention['intention_id'])
 
     data_return = {
-      'message': list_intention_by_client_id["message"],
+      'message': "Intenção de compra criada com sucesso!",
       'status': True,
       'data': last_intention
     }

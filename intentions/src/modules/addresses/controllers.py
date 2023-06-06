@@ -2,7 +2,6 @@
 from flask import Blueprint, jsonify
 from flask_restx import Namespace, Resource, fields
 from  modules.addresses.services.create_address import CreateAddress
-from  modules.addresses.services.update_address import UpdateAddress
 
 ns = Namespace('Addresses', description='Rotas relacionadas para processar endereços')
 
@@ -38,10 +37,3 @@ class Addresses(Resource):
   def post(self):
     address_created = CreateAddress.execute()
     return jsonify(address_created)
-
-@ns.route('/<address_id>/')
-class Address(Resource):
-  @ns.doc(body=update_address_request_body)
-  def put(self, address_id):
-    address_updated = UpdateAddress.execute()
-    return jsonify(address_updated)

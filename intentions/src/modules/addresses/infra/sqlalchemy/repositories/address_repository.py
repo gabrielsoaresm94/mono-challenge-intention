@@ -48,8 +48,3 @@ class AddressRepository():
     except Exception as exception:
       db.session.rollback()
       raise exception
-  def update():
-    data = {
-      'message': 'Endereço atualizado com sucesso!',
-    }
-    return data
