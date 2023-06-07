@@ -42,3 +42,6 @@ docker exec -it intentions-service bash -c "flask db upgrade"
 3. Buscar produto (não é obrigatório);
 4. Cria uma intenção de compra, necessita do identificador do cliente, do identificar do endereço do cliente e dos identificadores dos produtos;
 5. Listar intenções de compra;
+
+## Exemplo
+![Gato Fofo](fluxo.png)

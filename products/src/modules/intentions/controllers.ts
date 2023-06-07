@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express';
 import UpdateIntention from './services/update-intention';
 import FindProduct from '../products/services/found-products';
 import { IProduct, IntentionStatus } from './dtos';
-import { IResponse } from '../../shared/dtos';
+// import { IResponse } from '../../shared/dtos';
 
 const intentionsRouter = Router();
 
@@ -15,12 +15,26 @@ const intentionsRouter = Router();
  *     tags:
  *       - Intentions
  *     parameters:
+ *       - name: intention_id
+ *         in: path
+ *         description: "intention_id"
+ *         required: true
+ *         type: string
+ *         example: 1
  *       - in: body
  *         name: body
  *         description: "Objeto de login que necessita para armazenar no banco."
  *         required: true
  *         schema:
- *           "$ref": "#/definitions/addLogin"
+ *           type: object
+ *           required:
+ *             - products_ids
+ *           properties:
+ *             products_ids:
+ *                type: array
+ *                items:
+ *                  type: integer
+ *                  example: 1
  *     responses:
  *       200:
  *         description: Success
@@ -75,3 +89,5 @@ intentionsRouter.put(
     });
   }
 );
+
+export default intentionsRouter;

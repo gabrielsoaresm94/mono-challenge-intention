@@ -8,10 +8,12 @@ def request_provider(http_method, url, query_params, body):
       response = get_res.json()
       print(response)
     elif http_method == "post":
-      post_res = requests.post(url, data=body)
+      headers = {'Content-Type': 'application/json'}
+      post_res = requests.post(url, data=body, headers=headers)
       response = post_res.json()
     elif http_method == "put":
-      put_res = requests.put(url, data=body)
+      headers = {'Content-Type': 'application/json'}
+      put_res = requests.put(url, data=body, headers=headers)
       response = put_res.json()
     elif http_method == "delete":
       delete_res = requests.delete(url)

@@ -24,7 +24,11 @@ export async function axiosProvider(
         });
         break;
       case HTTPMethod.POST:
-        response = await axios.post(url, body);
+        response = await axios.post(url, body, {
+          headers: {
+            'Content-Type': 'application/json'
+          }}
+        );
         break;
       case HTTPMethod.PUT:
         response = await axios.put(url, body);

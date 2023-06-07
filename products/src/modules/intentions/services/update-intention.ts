@@ -28,8 +28,8 @@ class UpdateIntention {
       intention_products: intentionProducts,
     };
     const PATCH = 'patch' as HTTPMethod;
-    const url = 'http://intentions-service:5000/v1/intentions/'
-    const intentionUpdated = await axiosProvider(PATCH, `${url}/${intentionId}/`, intentionRequestBody);
+    const url = 'http://intentions-service:5000/v1/intentions'
+    const intentionUpdated = await axiosProvider(PATCH, `${url}/${intentionId}/`, undefined, intentionRequestBody);
 
     if (!intentionUpdated) {
       return intentionUpdated;

@@ -1,6 +1,8 @@
 import express, { Router, Request, Response } from 'express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
+import bodyParser from 'body-parser';
+
 import routes from './routes';
 
 const app = express();
@@ -26,6 +28,8 @@ const options = {
   apis: ['*/**/controllers.ts'],
 };
 
+app.use(bodyParser.json())
+app.use(express.json());
 app.use('/v1', routes);
 
 const swaggerSpec = swaggerJSDoc(options);
