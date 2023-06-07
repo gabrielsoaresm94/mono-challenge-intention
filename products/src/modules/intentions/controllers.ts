@@ -8,25 +8,44 @@ const intentionsRouter = Router();
 
 /**
  * @swagger
- * /intentions/<intention_id>:
+ * /intentions/{intention_id}:
  *   put:
  *     summary: Seleciona produtos e atualiza intenção.
  *     description: Seleciona produtos dá intenção de compra e atualiza status.
  *     tags:
  *       - Intentions
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         description: "Objeto de login que necessita para armazenar no banco."
+ *         required: true
+ *         schema:
+ *           "$ref": "#/definitions/addLogin"
  *     responses:
  *       200:
  *         description: Success
  */
 intentionsRouter.put(
-  '/',
+  '/:intention_id',
   async (req: Request, res: Response): Promise<Response> => {
-    const intentionId: Number = req.body.intention_id;
+    const intentionIdParam: string = req.params.intention_id;
     const productsIds: Array<Number> =  req.body.products_ids;
 
-    if (!intentionId) {}
+    if (!intentionIdParam) {
+      return res.status(400).json({
+        message: 'Parâmetro "intention_id" é obrigatório!',
+        status: false,
+      });
+    }
 
-    if (!productsIds || (productsIds && productsIds.length <= 0)) {}
+    const intentionId = Number(intentionIdParam)
+
+    if (!productsIds || (productsIds && productsIds.length <= 0)) {
+      return res.status(400).json({
+        message: 'Campo "products_ids" é obrigatório!',
+        status: false,
+      });
+    }
 
     const products: Array<IProduct> = []
     for (const productId of productsIds) {

@@ -1,3 +1,4 @@
+# from flask_sqlalchemy import text
 from shared.infra.db.sqlalchemy import sqlalchemy as db
 from modules.intentions.infra.sqlalchemy.entities.intention import Intention
 
@@ -13,6 +14,26 @@ class IntentionRepository():
       db.session.commit()
       data = {
         'message': 'Intenção de compra criada com sucesso!',
+        'status': True
+      }
+      return data
+    except Exception as exception:
+      db.session.rollback()
+      raise exception
+  def update_status(intention_id, intention_status):
+    try:
+      intention = Intention.query.filter_by(intention_id=intention_id).all()
+      if intention is None:
+        no_data = {
+          'message': 'Nenhuma intenção de compra encontrada!',
+          'status': False,
+        }
+        return no_data
+      intention_updated = db.update(Intention).where(Intention.intention_id == intention_id).values(status=intention_status)
+      db.session.execute(intention_updated)
+      db.session.commit()
+      data = {
+        'message': 'Intenção de compra atualizada com sucesso!',
         'status': True
       }
       return data
@@ -50,6 +71,24 @@ class IntentionRepository():
         'message': 'Intenções de compra listadas com sucesso!',
         'status': True,
         'data': [intention.to_dict() for intention in intentions]
+      }
+      return data
+    except Exception as exception:
+      db.session.rollback()
+      raise exception
+  def find(intention_id):
+    try:
+      intention = Intention.query.filter_by(intention_id=intention_id).all()
+      if intention is None:
+        no_data = {
+          'message': 'Nenhuma intenção de compra encontrada!',
+          'status': False,
+        }
+        return no_data
+      data = {
+        'message': 'Intenções de compra encontrada com sucesso!',
+        'status': True,
+        'data': intention
       }
       return data
     except Exception as exception:

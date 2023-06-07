@@ -4,6 +4,9 @@ from flask_restx import Namespace, Resource, fields
 from modules.intentions.services.create_intention import CreateIntention
 from modules.intentions.services.list_intentions import ListIntentions
 from modules.addresses.services.list_address_by_client_id import ListAddressesByClientId
+from modules.intentions.services.list_intention_products import ListIntentionProducts
+from modules.intentions.services.update_intention_status import UpdateIntentionStatus
+from modules.intentions.services.create_intention_product import CreateIntentionProduct
 from shared.providers.request_http_provider.request_provider import request_provider
 
 ns = Namespace('Intentions', description='Rotas relacionadas para processar intenções')
@@ -13,7 +16,7 @@ create_intention_request_body = ns.model(
   {
     "client_id": fields.Integer(example=1, required=True, description="Identificador do cliente"),
     "address_id": fields.Integer(example=1, required=True, description="Identificador do endereço"),
-    'products': fields.List(fields.Integer, example=[1, 2, 3], required=True, description="Identificadores dos produtos, vindos da fake_api")
+    "products_ids": fields.List(fields.Integer, example=[1, 2, 3], required=True, description="Identificadores dos produtos, vindos da fake_api"),
   }
 )
 
@@ -36,7 +39,14 @@ return_intention_response = ns.model(
     "intention_id": fields.String(example=1, required=True, description="Identificador da intenção de compra"),
     "status": fields.String(example='SELECIONADO', required=True, description="Status da intenção de compra"),
     "address_id": fields.Integer(example=1, required=True, description="Identificador do endereço"),
-    "products": fields.List(fields.Nested(product), required=True, description="Dados dos produtos da intenção de compra")
+  }
+)
+
+update_intention_request_body = ns.model(
+  "UpdateIntentionsRequestBody",
+  {
+    "intention_status": fields.String(example="SELECIONADO", required=True, description="Campo para atualizar o status da intenção"),
+    "intention_products": fields.List(fields.Nested(product), required=True, description="Dados dos produtos da intenção de compra"),
   }
 )
 
@@ -51,21 +61,21 @@ class Intentions(Resource):
     json_data = request.get_json()
 
     if not json_data:
-      return {"message": "O corpo não pode ser um objeto vazio!"}, 400
+      return {"message": "O corpo não pode ser um objeto vazio!", "status": False}, 400
 
     intention_data = request.get_json(force=True)
     if intention_data.get("client_id") is None:
-      return {"message": "Campo 'client_id' é obrigatório!"}, 400
+      return {"message": "Campo 'client_id' é obrigatório!", "status": False}, 400
 
     if intention_data.get("address_id") is None:
-      return {"message": "Campo 'address_id' é obrigatório!"}, 400
+      return {"message": "Campo 'address_id' é obrigatório!", "status": False}, 400
 
-    if intention_data.get("products") is None:
-      return {"message": "Campo 'products' é obrigatório!"}, 400
+    if intention_data.get("products_ids") is None:
+      return {"message": "Campo 'products_ids' é obrigatório!", "status": False}, 400
 
     client_id = intention_data.get("client_id")
     address_id = intention_data.get("address_id")
-    products = intention_data.get("products")
+    products_ids = intention_data.get("products_ids")
 
     address_by_client_id = ListAddressesByClientId.execute(client_id)
     address_by_client_id_data = address_by_client_id["data"]
@@ -73,15 +83,46 @@ class Intentions(Resource):
     if len(address_found) <= 0:
       return {"message": "Impossível salvar uma intenção para um endereço que não foi cadastrado pelo cliente!"}, 400
 
-    intention_return = CreateIntention.execute(client_id, address_id, products)
+    intention_return = CreateIntention.execute(client_id, address_id, products_ids)
 
     return jsonify(intention_return)
 
 @ns.route('/<intention_id>/')
 class Intention(Resource):
-  def put(self, intention_id):
-    product_id = intention_id
-    data = {
-      'message': 'Hello World!',
+  @ns.doc(body=update_intention_request_body)
+  def patch(self, intention_id):
+    json_data = request.get_json()
+
+    if not json_data:
+      return {"message": "O corpo não pode ser um objeto vazio!", "status": False}, 400
+
+    intention_data = request.get_json(force=True)
+    if intention_data.get("intention_status") is None:
+      return {"message": "Campo 'intention_status' é obrigatório!", "status": False}, 400
+
+    if intention_data.get("intention_products") is None:
+      return {"message": "Campo 'intention_products' é obrigatório!", "status": False}, 400
+
+    intention_status = intention_data.get("intention_status")
+    intention_products = intention_data.get("intention_products")
+
+    intention_return = UpdateIntentionStatus.execute(intention_id, intention_status)
+
+    intention_products_return = []
+    for intention_product in intention_products:
+      intention_product_return = CreateIntentionProduct.execute(intention_id, intention_product)
+      intention_products_return.append(intention_product_return["data"])
+
+    data_return = {
+      'message': "Produtos da intenção de compra selecionados com sucesso!",
+      'status': True,
+      'data': intention_products_return
     }
-    return jsonify(data)
+    return jsonify(data_return)
+
+@ns.route('/<intention_id>/products')
+class IntentionProducts(Resource):
+  @ns.response(200, 'Success', [product])
+  def get(self, intention_id):
+    intentions_listed = ListIntentionProducts.execute(intention_id)
+    return jsonify(intentions_listed)

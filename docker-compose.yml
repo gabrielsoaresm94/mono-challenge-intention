@@ -58,7 +58,7 @@ services:
   #     - RABBITMQ_DEFAULT_PASS="${CHALLENGE_INTENTION_MESSENGER_PASS}"
 volumes:
   intentions-service:
-  # products-service:
+  products-service:
   challenge-intention-db:
   # challenge-intention-messenger:
 networks: 

@@ -42,14 +42,14 @@ class Clients(Resource):
     json_data = request.get_json()
 
     if not json_data:
-      return {"message": "O corpo não pode ser um objeto vazio!"}, 400
+      return {"message": "O corpo não pode ser um objeto vazio!", "status": False}, 400
 
     client_data = request.get_json(force=True)
     if client_data.get("name") is None:
-      return {"message": "Campo 'name' é obrigatório!"}, 400
+      return {"message": "Campo 'name' é obrigatório!", "status": False}, 400
 
     if client_data.get("address") is None:
-      return {"message": "Campo 'address' é obrigatório!"}, 400
+      return {"message": "Campo 'address' é obrigatório!", "status": False}, 400
 
     client_name = client_data.get("name")
     client_return = CreateClient.execute(client_name)

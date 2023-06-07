@@ -2,8 +2,8 @@ from shared.infra.db.sqlalchemy import sqlalchemy as db
 from modules.intentions.infra.sqlalchemy.entities.intention import Intention
 from modules.intentions.infra.sqlalchemy.entities.intention_product import IntentionProduct
 
-class IntentionRepository():
-  def create(product_data, intention_id):
+class IntentionProductRepository():
+  def create(intention_id, product_data):
     try:
       intention_product = IntentionProduct(
         product_id = product_data["product_id"],
@@ -28,6 +28,24 @@ class IntentionRepository():
   def list():
     try:
       intention_products = IntentionProduct.query.all()
+      if intention_products is None:
+        no_data = {
+          'message': 'Nenhum produto de intenções de compra encontrado!',
+          'status': False,
+        }
+        return no_data
+      data = {
+        'message': 'Produtos de intenções de compra listados com sucesso!',
+        'status': True,
+        'data': [intention_product.to_dict() for intention_product in intention_products]
+      }
+      return data
+    except Exception as exception:
+      db.session.rollback()
+      raise exception
+  def list_by_intention_id(intention_id):
+    try:
+      intention_products = IntentionProduct.query.filter_by(intention_id=intention_id).all()
       if intention_products is None:
         no_data = {
           'message': 'Nenhum produto da intenção de compra encontrado!',
