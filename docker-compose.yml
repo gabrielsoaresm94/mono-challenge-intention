@@ -1,0 +1,66 @@
+version: '3'
+services:
+  intentions-service:
+    build: './intentions'
+    container_name: intentions-service
+    ports:
+      - 5000:5000
+    depends_on:
+      - challenge-intention-db
+      # - challenge-intention-messenger
+      - products-service
+    volumes:
+      - ./intentions/src:/app
+    env_file:
+      - .env
+    networks:
+      - challenge-intention-network
+  products-service:
+    build: './products'
+    container_name: products-service
+    ports:
+      - 3001:3001
+    depends_on:
+      - challenge-intention-db
+      # - challenge-intention-messenger
+    volumes:
+      - ./products:/app
+    networks:
+      - challenge-intention-network
+  challenge-intention-db:
+    image: "postgres:12"
+    container_name: challenge-intention-db
+    hostname: challenge-intention-db-postgres
+    restart: "always"
+    ports:
+      - "5432:5432"
+    volumes:
+      - challenge-intention-db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: "${CHALLENGE_INTENTION_DB_PASSWORD}"
+      POSTGRES_USER: "${CHALLENGE_INTENTION_DB_USER}"
+      POSTGRES_DB: "${CHALLENGE_INTENTION_DB_NAME}"
+      # PGDATA: /var/lib/postgresql/data
+    networks:
+      - challenge-intention-network
+  # challenge-intention-messenger:
+  #   image: rabbitmq:3-management
+  #   container_name: challenge-intention-messenger
+  #   hostname: challenge-intention-messenger
+  #   networks:
+  #     - challenge-intention-network
+  #   ports:
+  #     - 5672:5672
+  #     - 25676:25676
+  #     - 15672:15672
+  #   environment:
+  #     - RABBITMQ_DEFAULT_USER="${CHALLENGE_INTENTION_MESSENGER_USER}"
+  #     - RABBITMQ_DEFAULT_PASS="${CHALLENGE_INTENTION_MESSENGER_PASS}"
+volumes:
+  intentions-service:
+  products-service:
+  challenge-intention-db:
+  # challenge-intention-messenger:
+networks: 
+  challenge-intention-network:
+    driver: bridge
